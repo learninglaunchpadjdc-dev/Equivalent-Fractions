@@ -156,9 +156,14 @@
             </div>
 
             <div class="glass-panel flex-1 p-6">
-                <h2 class="text-white font-bold text-[10px] uppercase tracking-wider opacity-70 mb-4">Calculation Logs</h2>
+                <h2 class="text-white font-bold text-[10px] uppercase tracking-wider opacity-70 mb-4">Deployment Diagnostics</h2>
                 <div id="logs" class="space-y-3 font-mono-custom text-[11px]">
-                    <!-- Logs will appear here -->
+                    <div class="p-2 rounded bg-amber-500/10 border-l-2 border-amber-500 text-amber-200">
+                        <span class="opacity-50">HINT:</span> If you see code on GitHub, go to <b>Settings > Pages</b> and enable the "main" branch.
+                    </div>
+                    <div class="p-2 rounded bg-emerald-500/10 border-l-2 border-emerald-500 text-emerald-300">
+                        <span class="opacity-50">FILE:</span> Ensure this file is named exactly <b>index.html</b> in your root folder.
+                    </div>
                 </div>
             </div>
         </div>
@@ -205,14 +210,6 @@
             update();
         }
 
-        function addLog(msg, type = 'info') {
-            const log = document.createElement('div');
-            log.className = `p-2 rounded bg-black/20 border-l-2 ${type === 'success' ? 'border-emerald-500 text-emerald-300' : 'border-slate-500 text-slate-400'}`;
-            log.innerHTML = `<span class="opacity-50">[${new Date().toLocaleTimeString([], {hour12:false})}]</span> ${msg}`;
-            logsContainer.prepend(log);
-            if(logsContainer.children.length > 5) logsContainer.lastChild.remove();
-        }
-
         function update() {
             const na = parseInt(document.getElementById('numA').value) || 0;
             const da = parseInt(document.getElementById('denA').value) || 1;
@@ -248,10 +245,7 @@
             const startX = (w - barWidth) / 2;
             const startY = h / 2 - 80;
 
-            // Draw Bar A
             drawFractionBar(startX, startY, barWidth, barHeight, na, da, "FRACTION A", "#EAA834");
-            
-            // Draw Bar B
             drawFractionBar(startX, startY + 120, barWidth, barHeight, nb, db, "FRACTION B", "#4ade80");
         }
 
@@ -259,7 +253,6 @@
             ctx.fillStyle = "rgba(255,255,255,0.05)";
             ctx.fillRect(x, y, w, h);
 
-            // Label
             ctx.fillStyle = "rgba(255,255,255,0.4)";
             ctx.font = '10px "JetBrains Mono"';
             ctx.textAlign = 'left';
@@ -268,8 +261,6 @@
             if (den <= 0) return;
 
             const segmentWidth = w / den;
-            
-            // Draw Segments
             for (let i = 0; i < den; i++) {
                 ctx.strokeStyle = "rgba(255,255,255,0.1)";
                 ctx.strokeRect(x + (i * segmentWidth), y, segmentWidth, h);
