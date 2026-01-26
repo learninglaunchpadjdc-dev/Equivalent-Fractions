@@ -1,324 +1,289 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-  <meta http-equiv="Content-Style-Type" content="text/css">
-  <title></title>
-  <meta name="Generator" content="Cocoa HTML Writer">
-  <meta name="CocoaVersion" content="2685.1">
-  <style type="text/css">
-    p.p1 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #4689cc; -webkit-text-stroke: #4689cc}
-    p.p2 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #8cd3fe; -webkit-text-stroke: #8cd3fe}
-    p.p3 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #c27e65; -webkit-text-stroke: #c27e65}
-    p.p4 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca}
-    p.p5 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #cacaca; -webkit-text-stroke: #cacaca; min-height: 16.0px}
-    p.p6 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #71c083; -webkit-text-stroke: #71c083}
-    p.p7 {margin: 0.0px 0.0px 0.0px 0.0px; font: 14.0px Menlo; color: #6d7378; -webkit-text-stroke: #6d7378}
-    span.s1 {font-kerning: none; background-color: #171818}
-    span.s2 {font-kerning: none; color: #8cd3fe; background-color: #171818; -webkit-text-stroke: 0px #8cd3fe}
-    span.s3 {font-kerning: none; color: #6d6d6d; background-color: #171818; -webkit-text-stroke: 0px #6d6d6d}
-    span.s4 {font-kerning: none; color: #cacaca; background-color: #171818; -webkit-text-stroke: 0px #cacaca}
-    span.s5 {font-kerning: none; color: #c27e65; background-color: #171818; -webkit-text-stroke: 0px #c27e65}
-    span.s6 {font-kerning: none; color: #4689cc; background-color: #171818; -webkit-text-stroke: 0px #4689cc}
-    span.s7 {font-kerning: none; color: #d4d4d4; background-color: #171818; -webkit-text-stroke: 0px #d4d4d4}
-    span.s8 {font-kerning: none; color: #a7c598; background-color: #171818; -webkit-text-stroke: 0px #a7c598}
-    span.s9 {font-kerning: none; color: #71c083; background-color: #171818; -webkit-text-stroke: 0px #71c083}
-    span.s10 {font-kerning: none}
-    span.s11 {font-kerning: none; color: #b76ff7; background-color: #171818; -webkit-text-stroke: 0px #b76ff7}
-    span.s12 {font-kerning: none; color: #6d7378; background-color: #171818; -webkit-text-stroke: 0px #6d7378}
-    span.s13 {font-kerning: none; color: #f67c30; background-color: #171818; -webkit-text-stroke: 0px #f67c30}
-    span.s14 {font-kerning: none; color: #36c0a0; background-color: #171818; -webkit-text-stroke: 0px #36c0a0}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fraction Checker | Design System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(20, 28, 42);
+            overflow: hidden;
+            font-family: 'Stack Sans Notch', ui-sans-serif, system-ui, sans-serif;
+        }
+
+        .svg-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        .content-overlay {
+            position: absolute;
+            top: 17.6%;
+            left: 2.6%;
+            width: 94.8%;
+            height: 77.8%;
+            z-index: 10;
+            display: flex;
+            flex-direction: row;
+            gap: 20px;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 768px) {
+            .content-overlay {
+                flex-direction: column;
+                overflow-y: auto;
+                top: 10%;
+                height: 85%;
+            }
+            .sidebar-panel, .main-panel {
+                width: 100% !important;
+            }
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+        }
+
+        .fraction-input {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            text-align: center;
+            font-family: 'JetBrains Mono', monospace;
+            color: white;
+            font-size: 1.5rem;
+            width: 80px;
+            padding: 10px;
+            transition: all 0.2s;
+        }
+
+        .fraction-input:focus {
+            outline: none;
+            border-color: #EAA834;
+            background: rgba(0, 0, 0, 0.6);
+        }
+
+        .fraction-divider {
+            height: 2px;
+            background: rgba(255, 255, 255, 0.2);
+            width: 80px;
+            margin: 8px 0;
+        }
+
+        .status-badge {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 10px;
+            padding: 2px 8px;
+            border-radius: 4px;
+            text-transform: uppercase;
+        }
+
+        canvas {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Font Utility Overrides */
+        .font-notch { font-family: 'Stack Sans Notch', sans-serif; }
+        .font-mono-custom { font-family: 'JetBrains Mono', monospace; }
+    </style>
 </head>
 <body>
-<p class="p1"><span class="s1">&lt;!DOCTYPE</span><span class="s2"> html</span><span class="s1">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;</span><span class="s1">html</span><span class="s4"> </span><span class="s2">lang</span><span class="s3">=</span><span class="s5">"en"</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">meta</span><span class="s4"> </span><span class="s1">charset</span><span class="s3">=</span><span class="s5">"UTF-8"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">meta</span><span class="s4"> </span><span class="s2">name</span><span class="s3">=</span><span class="s1">"viewport"</span><span class="s4"> </span><span class="s2">content</span><span class="s3">=</span><span class="s1">"width=device-width, initial-scale=1.0"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">title</span><span class="s3">&gt;</span><span class="s1">Fraction Checker | Design System</span><span class="s3">&lt;/</span><span class="s6">title</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">link</span><span class="s4"> </span><span class="s2">rel</span><span class="s3">=</span><span class="s1">"preconnect"</span><span class="s4"> </span><span class="s2">href</span><span class="s3">=</span><span class="s1">"https://fonts.googleapis.com"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">link</span><span class="s4"> </span><span class="s2">rel</span><span class="s3">=</span><span class="s1">"preconnect"</span><span class="s4"> </span><span class="s2">href</span><span class="s3">=</span><span class="s1">"https://fonts.gstatic.com"</span><span class="s4"> </span><span class="s2">crossorigin</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">link</span><span class="s4"> </span><span class="s2">href</span><span class="s3">=</span><span class="s1">"https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;700&amp;family=JetBrains+Mono:wght@400;700&amp;display=swap"</span><span class="s4"> </span><span class="s2">rel</span><span class="s3">=</span><span class="s1">"stylesheet"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">script</span><span class="s4"> </span><span class="s2">src</span><span class="s3">=</span><span class="s1">"https://cdn.tailwindcss.com"</span><span class="s3">&gt;&lt;/</span><span class="s6">script</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s6">body</span><span class="s7">,</span><span class="s1"> </span><span class="s6">html</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">margin:</span><span class="s1"> </span><span class="s8">0</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">padding:</span><span class="s1"> </span><span class="s8">0</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s8">100%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s8">100%</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">background-color:</span><span class="s4"> </span><span class="s5">rgb(</span><span class="s8">20</span><span class="s7">,</span><span class="s4"> </span><span class="s8">28</span><span class="s7">,</span><span class="s4"> </span><span class="s8">42</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">overflow:</span><span class="s1"> </span><span class="s5">hidden</span><span class="s7">;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s2">font-family:</span><span class="s4"> </span><span class="s9">'Stack Sans Notch'</span><span class="s7">,</span><span class="s4"> </span><span class="s1">ui-sans-serif</span><span class="s7">,</span><span class="s4"> </span><span class="s1">system-ui</span><span class="s7">,</span><span class="s4"> </span><span class="s1">sans-serif</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.svg-background</span><span class="s4"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">position:</span><span class="s1"> </span><span class="s5">absolute</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">top:</span><span class="s1"> </span><span class="s8">0</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">left:</span><span class="s1"> </span><span class="s8">0</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s8">100%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s8">100%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">z-index:</span><span class="s1"> </span><span class="s8">0</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">pointer-events:</span><span class="s4"> </span><span class="s5">none</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.content-overlay</span><span class="s4"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">position:</span><span class="s1"> </span><span class="s5">absolute</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">top:</span><span class="s1"> </span><span class="s8">17.6%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">left:</span><span class="s1"> </span><span class="s8">2.6%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s8">94.8%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s8">77.8%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">z-index:</span><span class="s1"> </span><span class="s8">10</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">display:</span><span class="s1"> </span><span class="s5">flex</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">flex-direction:</span><span class="s4"> </span><span class="s5">row</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">gap:</span><span class="s1"> </span><span class="s8">20px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">padding:</span><span class="s1"> </span><span class="s8">20px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">box-sizing:</span><span class="s1"> </span><span class="s5">border-box</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>@</span><span class="s6">media</span><span class="s1"> (</span><span class="s6">max-width:</span><span class="s1"> 768</span><span class="s6">px</span><span class="s1">) </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>.content-overlay {</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">flex-direction:</span><span class="s1"> </span><span class="s5">column</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">overflow-y:</span><span class="s1"> </span><span class="s5">auto</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">top:</span><span class="s1"> </span><span class="s8">10%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s8">85%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">}</span></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">.sidebar-panel</span><span class="s7">,</span><span class="s4"> </span><span class="s1">.main-panel</span><span class="s4"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s8">100%</span><span class="s1"> </span><span class="s11">!important</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.glass-panel</span><span class="s4"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">background:</span><span class="s1"> </span><span class="s5">rgba(</span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0.03</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">backdrop-filter:</span><span class="s4"> </span><span class="s5">blur(</span><span class="s8">12px</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">-webkit-backdrop-filter:</span><span class="s4"> </span><span class="s5">blur(</span><span class="s8">12px</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">border:</span><span class="s1"> </span><span class="s8">1px</span><span class="s1"> </span><span class="s5">solid</span><span class="s1"> </span><span class="s5">rgba(</span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0.1</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">border-radius:</span><span class="s4"> </span><span class="s8">12px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">box-shadow:</span><span class="s1"> </span><span class="s8">0</span><span class="s1"> </span><span class="s8">8px</span><span class="s1"> </span><span class="s8">32px</span><span class="s1"> </span><span class="s8">0</span><span class="s1"> </span><span class="s5">rgba(</span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0.37</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.fraction-input</span><span class="s4"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">background:</span><span class="s1"> </span><span class="s5">rgba(</span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0.4</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">border:</span><span class="s1"> </span><span class="s8">1px</span><span class="s1"> </span><span class="s5">solid</span><span class="s1"> </span><span class="s5">rgba(</span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0.1</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">border-radius:</span><span class="s4"> </span><span class="s8">8px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">text-align:</span><span class="s1"> </span><span class="s5">center</span><span class="s7">;</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s2">font-family:</span><span class="s4"> </span><span class="s1">'JetBrains Mono'</span><span class="s7">,</span><span class="s4"> </span><span class="s5">monospace</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">color:</span><span class="s1"> </span><span class="s5">white</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">font-size:</span><span class="s1"> </span><span class="s8">1.5rem</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s8">80px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">padding:</span><span class="s1"> </span><span class="s8">10px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">transition:</span><span class="s1"> </span><span class="s5">all</span><span class="s1"> </span><span class="s8">0.2s</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.fraction-input:focus</span><span class="s4"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">outline:</span><span class="s1"> </span><span class="s5">none</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">border-color:</span><span class="s1"> #EAA834</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">background:</span><span class="s1"> </span><span class="s5">rgba(</span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0.6</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.fraction-divider</span><span class="s4"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s8">2px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">background:</span><span class="s1"> </span><span class="s5">rgba(</span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">255</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0.2</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s8">80px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">margin:</span><span class="s1"> </span><span class="s8">8px</span><span class="s1"> </span><span class="s8">0</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.status-badge</span><span class="s4"> </span><span class="s7">{</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s2">font-family:</span><span class="s4"> </span><span class="s1">'JetBrains Mono'</span><span class="s7">,</span><span class="s4"> </span><span class="s5">monospace</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">font-size:</span><span class="s1"> </span><span class="s8">10px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">padding:</span><span class="s1"> </span><span class="s8">2px</span><span class="s1"> </span><span class="s8">8px</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">border-radius:</span><span class="s4"> </span><span class="s8">4px</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">text-transform:</span><span class="s4"> </span><span class="s5">uppercase</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s6">canvas</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">background:</span><span class="s1"> </span><span class="s5">rgba(</span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0</span><span class="s7">,</span><span class="s1"> </span><span class="s8">0.2</span><span class="s5">)</span><span class="s7">;</span></p>
-<p class="p2"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">border-radius:</span><span class="s4"> </span><span class="s8">8px</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">width:</span><span class="s1"> </span><span class="s8">100%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s2">height:</span><span class="s1"> </span><span class="s8">100%</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">/* Font Utility Overrides */</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s6">.font-notch</span><span class="s4"> </span><span class="s7">{</span><span class="s4"> </span><span class="s2">font-family:</span><span class="s4"> </span><span class="s1">'Stack Sans Notch'</span><span class="s7">,</span><span class="s4"> </span><span class="s5">sans-serif</span><span class="s7">;</span><span class="s4"> </span><span class="s7">}</span></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">.font-mono-custom</span><span class="s4"> </span><span class="s7">{</span><span class="s4"> </span><span class="s2">font-family:</span><span class="s4"> </span><span class="s9">'JetBrains Mono'</span><span class="s7">,</span><span class="s4"> </span><span class="s5">monospace</span><span class="s7">;</span><span class="s4"> </span><span class="s7">}</span></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">style</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;/</span><span class="s1">head</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;</span><span class="s1">body</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">&lt;!-- SVG Template Layer (Matches Plotter Template) --&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"svg-background"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">svg</span><span class="s4"> </span><span class="s2">width</span><span class="s3">=</span><span class="s1">"100%"</span><span class="s4"> </span><span class="s2">height</span><span class="s3">=</span><span class="s1">"100%"</span><span class="s4"> </span><span class="s2">viewBox</span><span class="s3">=</span><span class="s1">"0 0 1920 1080"</span><span class="s4"> </span><span class="s2">preserveAspectRatio</span><span class="s3">=</span><span class="s1">"xMidYMid slice"</span><span class="s4"> </span><span class="s2">version</span><span class="s3">=</span><span class="s1">"1.1"</span><span class="s4"> </span><span class="s2">xmlns</span><span class="s3">=</span><span class="s1">"http://www.w3.org/2000/svg"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">rect</span><span class="s4"> </span><span class="s2">x</span><span class="s3">=</span><span class="s1">"0"</span><span class="s4"> </span><span class="s2">y</span><span class="s3">=</span><span class="s1">"0"</span><span class="s4"> </span><span class="s2">width</span><span class="s3">=</span><span class="s1">"1920"</span><span class="s4"> </span><span class="s2">height</span><span class="s3">=</span><span class="s1">"1080"</span><span class="s4"> </span><span class="s2">style</span><span class="s3">=</span><span class="s1">"fill:rgb(20,28,42);"</span><span class="s3">/&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">g</span><span class="s4"> </span><span class="s2">transform</span><span class="s3">=</span><span class="s1">"matrix(1.791357,0,0,1.791357,-39.566571,-4.934933)"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">text</span><span class="s4"> </span><span class="s2">x</span><span class="s3">=</span><span class="s1">"50px"</span><span class="s4"> </span><span class="s2">y</span><span class="s3">=</span><span class="s1">"77px"</span><span class="s4"> </span><span class="s2">style</span><span class="s3">=</span><span class="s1">"font-family: 'Stack Sans Notch'; font-weight:700;font-size:30px;fill:white; letter-spacing: 1px;"</span><span class="s3">&gt;</span><span class="s4">FRACTION </span><span class="s3">&lt;</span><span class="s6">tspan</span><span class="s4"> </span><span class="s2">fill</span><span class="s3">=</span><span class="s1">"rgb(234,168,52)"</span><span class="s3">&gt;</span><span class="s4">CHECKER</span><span class="s3">&lt;/</span><span class="s6">tspan</span><span class="s3">&gt;&lt;/</span><span class="s6">text</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">g</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">g</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"CONTENT-FRAME"</span><span class="s4"> </span><span class="s2">transform</span><span class="s3">=</span><span class="s1">"matrix(1,0,0,0.901191,0,11.773798)"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">rect</span><span class="s4"> </span><span class="s2">x</span><span class="s3">=</span><span class="s1">"50"</span><span class="s4"> </span><span class="s2">y</span><span class="s3">=</span><span class="s1">"190"</span><span class="s4"> </span><span class="s2">width</span><span class="s3">=</span><span class="s1">"1820"</span><span class="s4"> </span><span class="s2">height</span><span class="s3">=</span><span class="s1">"840"</span><span class="s4"> </span><span class="s2">style</span><span class="s3">=</span><span class="s1">"fill:rgb(235,235,235);fill-opacity:0.02; stroke: rgba(255,255,255,0.05); stroke-width: 1px;"</span><span class="s3">/&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">g</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s6">svg</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p7"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s1">&lt;!-- Interactive Layer --&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"content-overlay font-notch"</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;!-- Input Sidebar --&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-1/3 flex flex-col gap-4 sidebar-panel"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"glass-panel p-6 flex flex-col items-center"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">h2</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[#EAA834] font-bold uppercase tracking-widest text-[10px] mb-8 opacity-80 self-start"</span><span class="s3">&gt;</span><span class="s4">Comparison Terminal</span><span class="s3">&lt;/</span><span class="s6">h2</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex items-center gap-8"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s12">&lt;!-- Fraction A --&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex flex-col items-center"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">input</span><span class="s4"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"number"</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"numA"</span><span class="s4"> </span><span class="s2">value</span><span class="s3">=</span><span class="s1">"1"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"fraction-input"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"fraction-divider"</span><span class="s3">&gt;&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">input</span><span class="s4"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"number"</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"denA"</span><span class="s4"> </span><span class="s2">value</span><span class="s3">=</span><span class="s1">"2"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"fraction-input"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-3xl text-white/20 font-bold"</span><span class="s3">&gt;</span><span class="s4">=?</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s12">&lt;!-- Fraction B --&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex flex-col items-center"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">input</span><span class="s4"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"number"</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"numB"</span><span class="s4"> </span><span class="s2">value</span><span class="s3">=</span><span class="s1">"2"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"fraction-input"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s1"> </span><span class="s2">class</span><span class="s3">=</span><span class="s5">"fraction-divider"</span><span class="s3">&gt;&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                        </span></span><span class="s3">&lt;</span><span class="s6">input</span><span class="s4"> </span><span class="s2">type</span><span class="s3">=</span><span class="s1">"number"</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"denB"</span><span class="s4"> </span><span class="s2">value</span><span class="s3">=</span><span class="s1">"4"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"fraction-input"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"resultBox"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"mt-10 w-full py-4 rounded-lg text-center border transition-all duration-500"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"resultText"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"uppercase font-bold tracking-widest text-sm"</span><span class="s3">&gt;</span><span class="s4">Validating...</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"glass-panel flex-1 p-6"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">h2</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-white font-bold text-[10px] uppercase tracking-wider opacity-70 mb-4"</span><span class="s3">&gt;</span><span class="s4">Calculation Logs</span><span class="s3">&lt;/</span><span class="s6">h2</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"logs"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"space-y-3 font-mono-custom text-[11px]"</span><span class="s3">&gt;</span></p>
-<p class="p7"><span class="s4"><span class="Apple-converted-space">                    </span></span><span class="s1">&lt;!-- Logs will appear here --&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p7"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s1">&lt;!-- Visual Analysis Area --&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"w-2/3 glass-panel relative flex flex-col main-panel"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"p-3 border-b border-white/10 flex justify-between items-center bg-white/5 rounded-t-xl"</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[9px] text-slate-400 font-mono-custom tracking-tighter"</span><span class="s3">&gt;</span><span class="s4">ENGINE: </span><span class="s3">&lt;</span><span class="s6">span</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-emerald-400"</span><span class="s3">&gt;</span><span class="s4">MATH_VIS_V1</span><span class="s3">&lt;/</span><span class="s6">span</span><span class="s3">&gt;</span><span class="s4"> // RATIO_DETECTOR</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"ratioDisplay"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"text-[#EAA834] font-mono-custom text-[10px] font-bold"</span><span class="s3">&gt;</span><span class="s4">RATIO: 0.500</span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p3"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;</span><span class="s6">div</span><span class="s4"> </span><span class="s2">id</span><span class="s3">=</span><span class="s1">"canvasContainer"</span><span class="s4"> </span><span class="s2">class</span><span class="s3">=</span><span class="s1">"flex-1 relative m-8"</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s3">&lt;</span><span class="s6">canvas</span><span class="s1"> </span><span class="s2">id</span><span class="s3">=</span><span class="s5">"visualCanvas"</span><span class="s3">&gt;&lt;/</span><span class="s6">canvas</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s6">div</span><span class="s3">&gt;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;</span><span class="s1">script</span><span class="s3">&gt;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> canvas </span><span class="s7">=</span><span class="s1"> document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'visualCanvas'</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> ctx </span><span class="s7">=</span><span class="s1"> canvas</span><span class="s7">.</span><span class="s1">getContext</span><span class="s7">(</span><span class="s9">'2d'</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> container </span><span class="s7">=</span><span class="s1"> document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'canvasContainer'</span><span class="s7">);</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s4"> inputs </span><span class="s7">=</span><span class="s4"> </span><span class="s7">[</span><span class="s1">'numA'</span><span class="s7">,</span><span class="s4"> </span><span class="s1">'denA'</span><span class="s7">,</span><span class="s4"> </span><span class="s1">'numB'</span><span class="s7">,</span><span class="s4"> </span><span class="s1">'denB'</span><span class="s7">];</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> resultBox </span><span class="s7">=</span><span class="s1"> document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'resultBox'</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> resultText </span><span class="s7">=</span><span class="s1"> document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'resultText'</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> ratioDisplay </span><span class="s7">=</span><span class="s1"> document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'ratioDisplay'</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">const</span><span class="s1"> logsContainer </span><span class="s7">=</span><span class="s1"> document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'logs'</span><span class="s7">);</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">function</span><span class="s1"> init</span><span class="s7">()</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>window</span><span class="s7">.</span><span class="s1">addEventListener</span><span class="s7">(</span><span class="s9">'resize'</span><span class="s7">,</span><span class="s1"> resize</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>inputs</span><span class="s7">.</span><span class="s1">forEach</span><span class="s7">(</span><span class="s1">id </span><span class="s7">=&gt;</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s1">id</span><span class="s7">).</span><span class="s1">addEventListener</span><span class="s7">(</span><span class="s9">'input'</span><span class="s7">,</span><span class="s1"> update</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">});</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>resize</span><span class="s7">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>update</span><span class="s7">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">function</span><span class="s1"> resize</span><span class="s7">()</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> rect </span><span class="s7">=</span><span class="s1"> container</span><span class="s7">.</span><span class="s1">getBoundingClientRect</span><span class="s7">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> dpr </span><span class="s7">=</span><span class="s1"> window</span><span class="s7">.</span><span class="s1">devicePixelRatio </span><span class="s7">||</span><span class="s1"> </span><span class="s13">1</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>canvas</span><span class="s7">.</span><span class="s1">style</span><span class="s7">.</span><span class="s1">width </span><span class="s7">=</span><span class="s1"> rect</span><span class="s7">.</span><span class="s1">width </span><span class="s7">+</span><span class="s1"> </span><span class="s9">'px'</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>canvas</span><span class="s7">.</span><span class="s1">style</span><span class="s7">.</span><span class="s1">height </span><span class="s7">=</span><span class="s1"> rect</span><span class="s7">.</span><span class="s1">height </span><span class="s7">+</span><span class="s1"> </span><span class="s9">'px'</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>canvas</span><span class="s7">.</span><span class="s1">width </span><span class="s7">=</span><span class="s1"> rect</span><span class="s7">.</span><span class="s1">width </span><span class="s7">*</span><span class="s1"> dpr</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>canvas</span><span class="s7">.</span><span class="s1">height </span><span class="s7">=</span><span class="s1"> rect</span><span class="s7">.</span><span class="s1">height </span><span class="s7">*</span><span class="s1"> dpr</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>ctx</span><span class="s7">.</span><span class="s1">scale</span><span class="s7">(</span><span class="s1">dpr</span><span class="s7">,</span><span class="s1"> dpr</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>update</span><span class="s7">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">function</span><span class="s1"> addLog</span><span class="s7">(</span><span class="s1">msg</span><span class="s7">,</span><span class="s1"> type </span><span class="s7">=</span><span class="s1"> </span><span class="s9">'info'</span><span class="s7">)</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> log </span><span class="s7">=</span><span class="s1"> document</span><span class="s7">.</span><span class="s1">createElement</span><span class="s7">(</span><span class="s9">'div'</span><span class="s7">);</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">            </span>log</span><span class="s7">.</span><span class="s4">className </span><span class="s7">=</span><span class="s4"> </span><span class="s1">`p-2 rounded bg-black/20 border-l-2 </span><span class="s7">${</span><span class="s4">type </span><span class="s7">===</span><span class="s4"> </span><span class="s1">'success'</span><span class="s4"> </span><span class="s7">?</span><span class="s4"> </span><span class="s1">'border-emerald-500 text-emerald-300'</span><span class="s4"> </span><span class="s7">:</span><span class="s4"> </span><span class="s1">'border-slate-500 text-slate-400'</span><span class="s7">}</span><span class="s1">`</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>log</span><span class="s7">.</span><span class="s1">innerHTML </span><span class="s7">=</span><span class="s1"> </span><span class="s9">`&lt;span class="opacity-50"&gt;[</span><span class="s7">${</span><span class="s11">new</span><span class="s1"> </span><span class="s14">Date</span><span class="s7">().</span><span class="s1">toLocaleTimeString</span><span class="s7">([],</span><span class="s1"> </span><span class="s7">{</span><span class="s1">hour12</span><span class="s7">:</span><span class="s11">false</span><span class="s7">})}</span><span class="s9">]&lt;/span&gt; </span><span class="s7">${</span><span class="s1">msg</span><span class="s7">}</span><span class="s9">`</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>logsContainer</span><span class="s7">.</span><span class="s1">prepend</span><span class="s7">(</span><span class="s1">log</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s7">(</span><span class="s1">logsContainer</span><span class="s7">.</span><span class="s1">children</span><span class="s7">.</span><span class="s1">length </span><span class="s7">&gt;</span><span class="s1"> </span><span class="s13">5</span><span class="s7">)</span><span class="s1"> logsContainer</span><span class="s7">.</span><span class="s1">lastChild</span><span class="s7">.</span><span class="s1">remove</span><span class="s7">();</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">function</span><span class="s1"> update</span><span class="s7">()</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> na </span><span class="s7">=</span><span class="s1"> parseInt</span><span class="s7">(</span><span class="s1">document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'numA'</span><span class="s7">).</span><span class="s1">value</span><span class="s7">)</span><span class="s1"> </span><span class="s7">||</span><span class="s1"> </span><span class="s13">0</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> da </span><span class="s7">=</span><span class="s1"> parseInt</span><span class="s7">(</span><span class="s1">document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'denA'</span><span class="s7">).</span><span class="s1">value</span><span class="s7">)</span><span class="s1"> </span><span class="s7">||</span><span class="s1"> </span><span class="s13">1</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> nb </span><span class="s7">=</span><span class="s1"> parseInt</span><span class="s7">(</span><span class="s1">document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'numB'</span><span class="s7">).</span><span class="s1">value</span><span class="s7">)</span><span class="s1"> </span><span class="s7">||</span><span class="s1"> </span><span class="s13">0</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> db </span><span class="s7">=</span><span class="s1"> parseInt</span><span class="s7">(</span><span class="s1">document</span><span class="s7">.</span><span class="s1">getElementById</span><span class="s7">(</span><span class="s9">'denB'</span><span class="s7">).</span><span class="s1">value</span><span class="s7">)</span><span class="s1"> </span><span class="s7">||</span><span class="s1"> </span><span class="s13">1</span><span class="s7">;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> valA </span><span class="s7">=</span><span class="s1"> na </span><span class="s7">/</span><span class="s1"> da</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> valB </span><span class="s7">=</span><span class="s1"> nb </span><span class="s7">/</span><span class="s1"> db</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> isEquivalent </span><span class="s7">=</span><span class="s1"> </span><span class="s14">Math</span><span class="s7">.</span><span class="s1">abs</span><span class="s7">(</span><span class="s1">valA </span><span class="s7">-</span><span class="s1"> valB</span><span class="s7">)</span><span class="s1"> </span><span class="s7">&lt;</span><span class="s1"> </span><span class="s13">0.000001</span><span class="s1"> </span><span class="s7">&amp;&amp;</span><span class="s1"> da </span><span class="s7">!==</span><span class="s1"> </span><span class="s13">0</span><span class="s1"> </span><span class="s7">&amp;&amp;</span><span class="s1"> db </span><span class="s7">!==</span><span class="s1"> </span><span class="s13">0</span><span class="s7">;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s12">// UI State</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> </span><span class="s7">(</span><span class="s1">isEquivalent</span><span class="s7">)</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">                </span>resultBox</span><span class="s7">.</span><span class="s4">className </span><span class="s7">=</span><span class="s4"> </span><span class="s1">"mt-10 w-full py-4 rounded-lg text-center border border-emerald-500/50 bg-emerald-500/10 text-emerald-400"</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>resultText</span><span class="s7">.</span><span class="s1">innerText </span><span class="s7">=</span><span class="s1"> </span><span class="s9">"EQUIVALENT"</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>ratioDisplay</span><span class="s7">.</span><span class="s1">innerText </span><span class="s7">=</span><span class="s1"> </span><span class="s9">`RATIO: </span><span class="s7">${</span><span class="s1">valA</span><span class="s7">.</span><span class="s1">toFixed</span><span class="s7">(</span><span class="s13">3</span><span class="s7">)}</span><span class="s9">`</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">}</span><span class="s1"> </span><span class="s11">else</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">                </span>resultBox</span><span class="s7">.</span><span class="s4">className </span><span class="s7">=</span><span class="s4"> </span><span class="s1">"mt-10 w-full py-4 rounded-lg text-center border border-rose-500/50 bg-rose-500/10 text-rose-400"</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>resultText</span><span class="s7">.</span><span class="s1">innerText </span><span class="s7">=</span><span class="s1"> </span><span class="s9">"NOT EQUIVALENT"</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>ratioDisplay</span><span class="s7">.</span><span class="s1">innerText </span><span class="s7">=</span><span class="s1"> </span><span class="s9">`DIFF: </span><span class="s7">${</span><span class="s14">Math</span><span class="s7">.</span><span class="s1">abs</span><span class="s7">(</span><span class="s1">valA </span><span class="s7">-</span><span class="s1"> valB</span><span class="s7">).</span><span class="s1">toFixed</span><span class="s7">(</span><span class="s13">3</span><span class="s7">)}</span><span class="s9">`</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>draw</span><span class="s7">(</span><span class="s1">na</span><span class="s7">,</span><span class="s1"> da</span><span class="s7">,</span><span class="s1"> nb</span><span class="s7">,</span><span class="s1"> db</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">function</span><span class="s1"> draw</span><span class="s7">(</span><span class="s1">na</span><span class="s7">,</span><span class="s1"> da</span><span class="s7">,</span><span class="s1"> nb</span><span class="s7">,</span><span class="s1"> db</span><span class="s7">)</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> dpr </span><span class="s7">=</span><span class="s1"> window</span><span class="s7">.</span><span class="s1">devicePixelRatio </span><span class="s7">||</span><span class="s1"> </span><span class="s13">1</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> w </span><span class="s7">=</span><span class="s1"> canvas</span><span class="s7">.</span><span class="s1">width </span><span class="s7">/</span><span class="s1"> dpr</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> h </span><span class="s7">=</span><span class="s1"> canvas</span><span class="s7">.</span><span class="s1">height </span><span class="s7">/</span><span class="s1"> dpr</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>ctx</span><span class="s7">.</span><span class="s1">clearRect</span><span class="s7">(</span><span class="s13">0</span><span class="s7">,</span><span class="s1"> </span><span class="s13">0</span><span class="s7">,</span><span class="s1"> w</span><span class="s7">,</span><span class="s1"> h</span><span class="s7">);</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> barHeight </span><span class="s7">=</span><span class="s1"> </span><span class="s13">60</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> barWidth </span><span class="s7">=</span><span class="s1"> w </span><span class="s7">*</span><span class="s1"> </span><span class="s13">0.8</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> startX </span><span class="s7">=</span><span class="s1"> </span><span class="s7">(</span><span class="s1">w </span><span class="s7">-</span><span class="s1"> barWidth</span><span class="s7">)</span><span class="s1"> </span><span class="s7">/</span><span class="s1"> </span><span class="s13">2</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> startY </span><span class="s7">=</span><span class="s1"> h </span><span class="s7">/</span><span class="s1"> </span><span class="s13">2</span><span class="s1"> </span><span class="s7">-</span><span class="s1"> </span><span class="s13">80</span><span class="s7">;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Draw Bar A</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>drawFractionBar</span><span class="s7">(</span><span class="s1">startX</span><span class="s7">,</span><span class="s1"> startY</span><span class="s7">,</span><span class="s1"> barWidth</span><span class="s7">,</span><span class="s1"> barHeight</span><span class="s7">,</span><span class="s1"> na</span><span class="s7">,</span><span class="s1"> da</span><span class="s7">,</span><span class="s1"> </span><span class="s9">"FRACTION A"</span><span class="s7">,</span><span class="s1"> </span><span class="s9">"#EAA834"</span><span class="s7">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Draw Bar B</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>drawFractionBar</span><span class="s7">(</span><span class="s1">startX</span><span class="s7">,</span><span class="s1"> startY </span><span class="s7">+</span><span class="s1"> </span><span class="s13">120</span><span class="s7">,</span><span class="s1"> barWidth</span><span class="s7">,</span><span class="s1"> barHeight</span><span class="s7">,</span><span class="s1"> nb</span><span class="s7">,</span><span class="s1"> db</span><span class="s7">,</span><span class="s1"> </span><span class="s9">"FRACTION B"</span><span class="s7">,</span><span class="s1"> </span><span class="s9">"#4ade80"</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s11">function</span><span class="s1"> drawFractionBar</span><span class="s7">(</span><span class="s1">x</span><span class="s7">,</span><span class="s1"> y</span><span class="s7">,</span><span class="s1"> w</span><span class="s7">,</span><span class="s1"> h</span><span class="s7">,</span><span class="s1"> num</span><span class="s7">,</span><span class="s1"> den</span><span class="s7">,</span><span class="s1"> label</span><span class="s7">,</span><span class="s1"> color</span><span class="s7">)</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>ctx</span><span class="s7">.</span><span class="s1">fillStyle </span><span class="s7">=</span><span class="s1"> </span><span class="s9">"rgba(255,255,255,0.05)"</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>ctx</span><span class="s7">.</span><span class="s1">fillRect</span><span class="s7">(</span><span class="s1">x</span><span class="s7">,</span><span class="s1"> y</span><span class="s7">,</span><span class="s1"> w</span><span class="s7">,</span><span class="s1"> h</span><span class="s7">);</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s12">// Label</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>ctx</span><span class="s7">.</span><span class="s1">fillStyle </span><span class="s7">=</span><span class="s1"> </span><span class="s9">"rgba(255,255,255,0.4)"</span><span class="s7">;</span></p>
-<p class="p6"><span class="s4"><span class="Apple-converted-space">            </span>ctx</span><span class="s7">.</span><span class="s4">font </span><span class="s7">=</span><span class="s4"> </span><span class="s1">'10px "JetBrains Mono"'</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>ctx</span><span class="s7">.</span><span class="s1">textAlign </span><span class="s7">=</span><span class="s1"> </span><span class="s9">'left'</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span>ctx</span><span class="s7">.</span><span class="s1">fillText</span><span class="s7">(</span><span class="s1">label</span><span class="s7">,</span><span class="s1"> x</span><span class="s7">,</span><span class="s1"> y </span><span class="s7">-</span><span class="s1"> </span><span class="s13">10</span><span class="s7">);</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">if</span><span class="s1"> </span><span class="s7">(</span><span class="s1">den </span><span class="s7">&lt;=</span><span class="s1"> </span><span class="s13">0</span><span class="s7">)</span><span class="s1"> </span><span class="s11">return</span><span class="s7">;</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">const</span><span class="s1"> segmentWidth </span><span class="s7">=</span><span class="s1"> w </span><span class="s7">/</span><span class="s1"> den</span><span class="s7">;</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">            </span></span></p>
-<p class="p7"><span class="s4"><span class="Apple-converted-space">            </span></span><span class="s1">// Draw Segments</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s11">for</span><span class="s1"> </span><span class="s7">(</span><span class="s11">let</span><span class="s1"> i </span><span class="s7">=</span><span class="s1"> </span><span class="s13">0</span><span class="s7">;</span><span class="s1"> i </span><span class="s7">&lt;</span><span class="s1"> den</span><span class="s7">;</span><span class="s1"> i</span><span class="s7">++)</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>ctx</span><span class="s7">.</span><span class="s1">strokeStyle </span><span class="s7">=</span><span class="s1"> </span><span class="s9">"rgba(255,255,255,0.1)"</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span>ctx</span><span class="s7">.</span><span class="s1">strokeRect</span><span class="s7">(</span><span class="s1">x </span><span class="s7">+</span><span class="s1"> </span><span class="s7">(</span><span class="s1">i </span><span class="s7">*</span><span class="s1"> segmentWidth</span><span class="s7">),</span><span class="s1"> y</span><span class="s7">,</span><span class="s1"> segmentWidth</span><span class="s7">,</span><span class="s1"> h</span><span class="s7">);</span></p>
-<p class="p5"><span class="s1"><span class="Apple-converted-space">                </span></span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s11">if</span><span class="s1"> </span><span class="s7">(</span><span class="s1">i </span><span class="s7">&lt;</span><span class="s1"> num</span><span class="s7">)</span><span class="s1"> </span><span class="s7">{</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>ctx</span><span class="s7">.</span><span class="s1">fillStyle </span><span class="s7">=</span><span class="s1"> color</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>ctx</span><span class="s7">.</span><span class="s1">globalAlpha </span><span class="s7">=</span><span class="s1"> </span><span class="s13">0.6</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>ctx</span><span class="s7">.</span><span class="s1">fillRect</span><span class="s7">(</span><span class="s1">x </span><span class="s7">+</span><span class="s1"> </span><span class="s7">(</span><span class="s1">i </span><span class="s7">*</span><span class="s1"> segmentWidth</span><span class="s7">)</span><span class="s1"> </span><span class="s7">+</span><span class="s1"> </span><span class="s13">2</span><span class="s7">,</span><span class="s1"> y </span><span class="s7">+</span><span class="s1"> </span><span class="s13">2</span><span class="s7">,</span><span class="s1"> segmentWidth </span><span class="s7">-</span><span class="s1"> </span><span class="s13">4</span><span class="s7">,</span><span class="s1"> h </span><span class="s7">-</span><span class="s1"> </span><span class="s13">4</span><span class="s7">);</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                    </span>ctx</span><span class="s7">.</span><span class="s1">globalAlpha </span><span class="s7">=</span><span class="s1"> </span><span class="s13">1.0</span><span class="s7">;</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">                </span></span><span class="s7">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">            </span></span><span class="s7">}</span></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span></span><span class="s7">}</span></p>
-<p class="p5"><span class="s10"></span><br></p>
-<p class="p4"><span class="s1"><span class="Apple-converted-space">        </span>init</span><span class="s7">();</span></p>
-<p class="p1"><span class="s4"><span class="Apple-converted-space">    </span></span><span class="s3">&lt;/</span><span class="s1">script</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;/</span><span class="s1">body</span><span class="s3">&gt;</span></p>
-<p class="p1"><span class="s3">&lt;/</span><span class="s1">html</span><span class="s3">&gt;</span></p>
+
+    <!-- SVG Template Layer (Matches Plotter Template) -->
+    <div class="svg-background">
+        <svg width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" version="1.1" xmlns="http://www.w3.org/2000/svg">
+            <rect x="0" y="0" width="1920" height="1080" style="fill:rgb(20,28,42);"/>
+            <g transform="matrix(1.791357,0,0,1.791357,-39.566571,-4.934933)">
+                <text x="50px" y="77px" style="font-family: 'Stack Sans Notch'; font-weight:700;font-size:30px;fill:white; letter-spacing: 1px;">FRACTION <tspan fill="rgb(234,168,52)">CHECKER</tspan></text>
+            </g>
+            <g id="CONTENT-FRAME" transform="matrix(1,0,0,0.901191,0,11.773798)">
+                <rect x="50" y="190" width="1820" height="840" style="fill:rgb(235,235,235);fill-opacity:0.02; stroke: rgba(255,255,255,0.05); stroke-width: 1px;"/>
+            </g>
+        </svg>
+    </div>
+
+    <!-- Interactive Layer -->
+    <div class="content-overlay font-notch">
+        <!-- Input Sidebar -->
+        <div class="w-1/3 flex flex-col gap-4 sidebar-panel">
+            <div class="glass-panel p-6 flex flex-col items-center">
+                <h2 class="text-[#EAA834] font-bold uppercase tracking-widest text-[10px] mb-8 opacity-80 self-start">Comparison Terminal</h2>
+                
+                <div class="flex items-center gap-8">
+                    <!-- Fraction A -->
+                    <div class="flex flex-col items-center">
+                        <input type="number" id="numA" value="1" class="fraction-input">
+                        <div class="fraction-divider"></div>
+                        <input type="number" id="denA" value="2" class="fraction-input">
+                    </div>
+
+                    <div class="text-3xl text-white/20 font-bold">=?</div>
+
+                    <!-- Fraction B -->
+                    <div class="flex flex-col items-center">
+                        <input type="number" id="numB" value="2" class="fraction-input">
+                        <div class="fraction-divider"></div>
+                        <input type="number" id="denB" value="4" class="fraction-input">
+                    </div>
+                </div>
+
+                <div id="resultBox" class="mt-10 w-full py-4 rounded-lg text-center border transition-all duration-500">
+                    <span id="resultText" class="uppercase font-bold tracking-widest text-sm">Validating...</span>
+                </div>
+            </div>
+
+            <div class="glass-panel flex-1 p-6">
+                <h2 class="text-white font-bold text-[10px] uppercase tracking-wider opacity-70 mb-4">Calculation Logs</h2>
+                <div id="logs" class="space-y-3 font-mono-custom text-[11px]">
+                    <!-- Logs will appear here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Visual Analysis Area -->
+        <div class="w-2/3 glass-panel relative flex flex-col main-panel">
+            <div class="p-3 border-b border-white/10 flex justify-between items-center bg-white/5 rounded-t-xl">
+                <div class="text-[9px] text-slate-400 font-mono-custom tracking-tighter">ENGINE: <span class="text-emerald-400">MATH_VIS_V1</span> // RATIO_DETECTOR</div>
+                <div id="ratioDisplay" class="text-[#EAA834] font-mono-custom text-[10px] font-bold">RATIO: 0.500</div>
+            </div>
+            <div id="canvasContainer" class="flex-1 relative m-8">
+                <canvas id="visualCanvas"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('visualCanvas');
+        const ctx = canvas.getContext('2d');
+        const container = document.getElementById('canvasContainer');
+        const inputs = ['numA', 'denA', 'numB', 'denB'];
+        const resultBox = document.getElementById('resultBox');
+        const resultText = document.getElementById('resultText');
+        const ratioDisplay = document.getElementById('ratioDisplay');
+        const logsContainer = document.getElementById('logs');
+
+        function init() {
+            window.addEventListener('resize', resize);
+            inputs.forEach(id => {
+                document.getElementById(id).addEventListener('input', update);
+            });
+            resize();
+            update();
+        }
+
+        function resize() {
+            const rect = container.getBoundingClientRect();
+            const dpr = window.devicePixelRatio || 1;
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+            ctx.scale(dpr, dpr);
+            update();
+        }
+
+        function addLog(msg, type = 'info') {
+            const log = document.createElement('div');
+            log.className = `p-2 rounded bg-black/20 border-l-2 ${type === 'success' ? 'border-emerald-500 text-emerald-300' : 'border-slate-500 text-slate-400'}`;
+            log.innerHTML = `<span class="opacity-50">[${new Date().toLocaleTimeString([], {hour12:false})}]</span> ${msg}`;
+            logsContainer.prepend(log);
+            if(logsContainer.children.length > 5) logsContainer.lastChild.remove();
+        }
+
+        function update() {
+            const na = parseInt(document.getElementById('numA').value) || 0;
+            const da = parseInt(document.getElementById('denA').value) || 1;
+            const nb = parseInt(document.getElementById('numB').value) || 0;
+            const db = parseInt(document.getElementById('denB').value) || 1;
+
+            const valA = na / da;
+            const valB = nb / db;
+            const isEquivalent = Math.abs(valA - valB) < 0.000001 && da !== 0 && db !== 0;
+
+            // UI State
+            if (isEquivalent) {
+                resultBox.className = "mt-10 w-full py-4 rounded-lg text-center border border-emerald-500/50 bg-emerald-500/10 text-emerald-400";
+                resultText.innerText = "EQUIVALENT";
+                ratioDisplay.innerText = `RATIO: ${valA.toFixed(3)}`;
+            } else {
+                resultBox.className = "mt-10 w-full py-4 rounded-lg text-center border border-rose-500/50 bg-rose-500/10 text-rose-400";
+                resultText.innerText = "NOT EQUIVALENT";
+                ratioDisplay.innerText = `DIFF: ${Math.abs(valA - valB).toFixed(3)}`;
+            }
+
+            draw(na, da, nb, db);
+        }
+
+        function draw(na, da, nb, db) {
+            const dpr = window.devicePixelRatio || 1;
+            const w = canvas.width / dpr;
+            const h = canvas.height / dpr;
+            ctx.clearRect(0, 0, w, h);
+
+            const barHeight = 60;
+            const barWidth = w * 0.8;
+            const startX = (w - barWidth) / 2;
+            const startY = h / 2 - 80;
+
+            // Draw Bar A
+            drawFractionBar(startX, startY, barWidth, barHeight, na, da, "FRACTION A", "#EAA834");
+            
+            // Draw Bar B
+            drawFractionBar(startX, startY + 120, barWidth, barHeight, nb, db, "FRACTION B", "#4ade80");
+        }
+
+        function drawFractionBar(x, y, w, h, num, den, label, color) {
+            ctx.fillStyle = "rgba(255,255,255,0.05)";
+            ctx.fillRect(x, y, w, h);
+
+            // Label
+            ctx.fillStyle = "rgba(255,255,255,0.4)";
+            ctx.font = '10px "JetBrains Mono"';
+            ctx.textAlign = 'left';
+            ctx.fillText(label, x, y - 10);
+
+            if (den <= 0) return;
+
+            const segmentWidth = w / den;
+            
+            // Draw Segments
+            for (let i = 0; i < den; i++) {
+                ctx.strokeStyle = "rgba(255,255,255,0.1)";
+                ctx.strokeRect(x + (i * segmentWidth), y, segmentWidth, h);
+                
+                if (i < num) {
+                    ctx.fillStyle = color;
+                    ctx.globalAlpha = 0.6;
+                    ctx.fillRect(x + (i * segmentWidth) + 2, y + 2, segmentWidth - 4, h - 4);
+                    ctx.globalAlpha = 1.0;
+                }
+            }
+        }
+
+        init();
+    </script>
 </body>
 </html>
