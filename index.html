@@ -99,6 +99,18 @@
 
         .font-notch { font-family: 'Stack Sans Notch', sans-serif; }
         .font-mono-custom { font-family: 'JetBrains Mono', monospace; }
+
+        /* Custom Scrollbar */
+        #logs::-webkit-scrollbar {
+            width: 4px;
+        }
+        #logs::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        #logs::-webkit-scrollbar-thumb {
+            background: rgba(234, 168, 52, 0.2);
+            border-radius: 10px;
+        }
     </style>
 </head>
 <body>
@@ -141,17 +153,25 @@
                     </div>
                 </div>
 
-                <div id="resultBox" class="mt-10 w-full py-4 rounded-lg text-center border transition-all duration-500">
-                    <span id="resultText" class="uppercase font-bold tracking-widest text-sm">Validating...</span>
+                <div class="mt-8 flex gap-3 w-full">
+                    <button id="checkBtn" class="flex-1 bg-[#EAA834] hover:bg-[#f3b54a] active:scale-[0.98] text-slate-900 font-bold py-3 rounded-md transition-all text-[11px] uppercase tracking-wider">
+                        Check Equivalence
+                    </button>
+                </div>
+
+                <div id="resultBox" class="mt-6 w-full py-4 rounded-lg text-center border transition-all duration-500">
+                    <span id="resultText" class="uppercase font-bold tracking-widest text-sm">Waiting...</span>
                 </div>
             </div>
 
-            <div class="glass-panel flex-1 p-6">
-                <h2 class="text-white font-bold text-[10px] uppercase tracking-wider opacity-70 mb-4">Activity Log</h2>
-                <div id="logs" class="space-y-3 font-mono-custom text-[11px]">
-                    <div class="p-2 rounded bg-white/5 border-l-2 border-slate-500 text-slate-400">
-                        <span class="opacity-50">SYSTEM:</span> Fraction monitoring active.
-                    </div>
+            <!-- History Panel -->
+            <div class="glass-panel flex-1 p-6 flex flex-col overflow-hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-white font-bold text-[10px] uppercase tracking-wider opacity-70">Check History</h2>
+                    <button id="clearHistory" class="text-[9px] text-rose-400/60 hover:text-rose-400 uppercase font-bold transition-colors">Clear</button>
+                </div>
+                <div id="logs" class="space-y-2 font-mono-custom text-[10px] overflow-y-auto pr-1">
+                    <div id="emptyLog" class="text-slate-500 italic text-center py-10 opacity-50">No history recorded</div>
                 </div>
             </div>
         </div>
@@ -177,14 +197,24 @@
         const resultText = document.getElementById('resultText');
         const ratioDisplay = document.getElementById('ratioDisplay');
         const logsContainer = document.getElementById('logs');
+        const checkBtn = document.getElementById('checkBtn');
+        const clearHistory = document.getElementById('clearHistory');
+        const emptyLog = document.getElementById('emptyLog');
 
         function init() {
             window.addEventListener('resize', resize);
             inputs.forEach(id => {
-                document.getElementById(id).addEventListener('input', update);
+                document.getElementById(id).addEventListener('input', updateRealtime);
             });
+            
+            checkBtn.addEventListener('click', commitCheck);
+            clearHistory.addEventListener('click', () => {
+                logsContainer.innerHTML = '';
+                logsContainer.appendChild(emptyLog);
+            });
+
             resize();
-            update();
+            updateRealtime();
         }
 
         function resize() {
@@ -195,10 +225,10 @@
             canvas.width = rect.width * dpr;
             canvas.height = rect.height * dpr;
             ctx.scale(dpr, dpr);
-            update();
+            updateRealtime();
         }
 
-        function update() {
+        function updateRealtime() {
             const na = parseInt(document.getElementById('numA').value) || 0;
             const da = parseInt(document.getElementById('denA').value) || 1;
             const nb = parseInt(document.getElementById('numB').value) || 0;
@@ -208,17 +238,44 @@
             const valB = nb / db;
             const isEquivalent = Math.abs(valA - valB) < 0.000001 && da !== 0 && db !== 0;
 
-            if (isEquivalent) {
-                resultBox.className = "mt-10 w-full py-4 rounded-lg text-center border border-emerald-500/50 bg-emerald-500/10 text-emerald-400";
+            if (da === 0 || db === 0) {
+                resultBox.className = "mt-6 w-full py-4 rounded-lg text-center border border-white/10 text-slate-500";
+                resultText.innerText = "INVALID INPUT";
+                ratioDisplay.innerText = "ERROR: DIV/0";
+            } else if (isEquivalent) {
+                resultBox.className = "mt-6 w-full py-4 rounded-lg text-center border border-emerald-500/50 bg-emerald-500/10 text-emerald-400";
                 resultText.innerText = "EQUIVALENT";
                 ratioDisplay.innerText = `RATIO: ${valA.toFixed(3)}`;
             } else {
-                resultBox.className = "mt-10 w-full py-4 rounded-lg text-center border border-rose-500/50 bg-rose-500/10 text-rose-400";
+                resultBox.className = "mt-6 w-full py-4 rounded-lg text-center border border-rose-500/50 bg-rose-500/10 text-rose-400";
                 resultText.innerText = "NOT EQUIVALENT";
                 ratioDisplay.innerText = `DIFF: ${Math.abs(valA - valB).toFixed(3)}`;
             }
 
             draw(na, da, nb, db);
+        }
+
+        function commitCheck() {
+            const na = document.getElementById('numA').value;
+            const da = document.getElementById('denA').value;
+            const nb = document.getElementById('numB').value;
+            const db = document.getElementById('denB').value;
+
+            if (da == 0 || db == 0) return;
+
+            const isEq = Math.abs((na/da) - (nb/db)) < 0.000001;
+            
+            if (emptyLog) emptyLog.remove();
+
+            const logEntry = document.createElement('div');
+            logEntry.className = `p-2 rounded flex justify-between items-center border-l-2 ${isEq ? 'bg-emerald-500/5 border-emerald-500/50 text-emerald-200/80' : 'bg-rose-500/5 border-rose-500/50 text-rose-200/80'}`;
+            
+            logEntry.innerHTML = `
+                <span>${na}/${da} vs ${nb}/${db}</span>
+                <span class="text-[8px] opacity-60 uppercase font-bold">${isEq ? 'Pass' : 'Fail'}</span>
+            `;
+
+            logsContainer.prepend(logEntry);
         }
 
         function draw(na, da, nb, db) {
