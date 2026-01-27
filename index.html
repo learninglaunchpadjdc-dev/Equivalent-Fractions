@@ -3,322 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fraction Checker | Design System</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Stack+Sans+Notch:wght@400;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <title>Equivalent Fraction Checker | Tactical Analysis</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        body, html {
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;700;900&display=swap');
+
+        :root {
+            --bg-deep: #0f141e;
+            --panel-bg: #161b26;
+            --accent-amber: #f59e0b;
+            --accent-blue: #3b82f6;
+            --ui-border: #262c3a;
+            --panel-dark: #121824;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: #e2e8f0;
+            font-family: 'Inter', sans-serif;
             margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgb(20, 28, 42);
-            overflow: hidden;
-            font-family: 'Stack Sans Notch', ui-sans-serif, system-ui, sans-serif;
-        }
-
-        .svg-background {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
-
-        .content-overlay {
-            position: absolute;
-            top: 17.6%;
-            left: 2.6%;
-            width: 94.8%;
-            height: 77.8%;
-            z-index: 10;
+            height: 100vh;
             display: flex;
-            flex-direction: row;
-            gap: 20px;
-            padding: 20px;
-            box-sizing: border-box;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        @media (max-width: 768px) {
-            .content-overlay {
-                flex-direction: column;
-                overflow-y: auto;
-                top: 10%;
-                height: 85%;
-            }
-            .sidebar-panel, .main-panel {
-                width: 100% !important;
-            }
+        .mono { font-family: 'JetBrains Mono', monospace; }
+
+        .blueprint-bg {
+            background-image: 
+                linear-gradient(rgba(38, 44, 58, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(38, 44, 58, 0.4) 1px, transparent 1px);
+            background-size: 45px 45px;
         }
 
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        .panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--ui-border);
             border-radius: 12px;
-            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
         }
 
-        .fraction-input {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 8px;
-            text-align: center;
+        .input-box {
+            background: #0a0e14;
+            border: 1px solid #2d3646;
+            color: var(--accent-amber);
             font-family: 'JetBrains Mono', monospace;
-            color: white;
+            padding: 12px;
+            width: 70px;
+            height: 70px;
+            text-align: center;
             font-size: 1.5rem;
-            width: 80px;
-            padding: 10px;
+            border-radius: 8px;
+            font-weight: bold;
             transition: all 0.2s;
         }
 
-        .fraction-input:focus {
+        .input-box:focus {
             outline: none;
-            border-color: #EAA834;
-            background: rgba(0, 0, 0, 0.6);
+            border-color: var(--accent-blue);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
         }
 
-        .fraction-divider {
-            height: 2px;
-            background: rgba(255, 255, 255, 0.2);
-            width: 80px;
-            margin: 8px 0;
-        }
-
-        canvas {
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
+        .btn-analyze {
+            background: #f8fafc;
+            color: #0f172a;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: 14px;
             width: 100%;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-size: 0.85rem;
+        }
+
+        .btn-analyze:hover {
+            background: #cbd5e1;
+            transform: translateY(-1px);
+        }
+
+        .fraction-bar-container {
+            height: 80px;
+            background: rgba(10, 14, 20, 0.6);
+            border: 1px solid #2d3646;
+            display: flex;
+            width: 100%;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .segment {
             height: 100%;
+            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            position: relative;
+            transition: all 0.2s ease;
         }
 
-        .font-notch { font-family: 'Stack Sans Notch', sans-serif; }
-        .font-mono-custom { font-family: 'JetBrains Mono', monospace; }
+        .segment:last-child { border-right: none; }
 
-        /* Custom Scrollbar */
-        #logs::-webkit-scrollbar {
-            width: 4px;
+        .segment-fill {
+            position: absolute;
+            inset: 0;
+            transition: background 0.3s, box-shadow 0.3s;
         }
-        #logs::-webkit-scrollbar-track {
-            background: transparent;
+
+        .segment:hover .segment-fill {
+            filter: brightness(1.2);
         }
-        #logs::-webkit-scrollbar-thumb {
-            background: rgba(234, 168, 52, 0.2);
-            border-radius: 10px;
+
+        .registry-entry {
+            border-left: 2px solid #2d3646;
+            padding: 12px;
+            background: rgba(10, 14, 20, 0.4);
+            margin-bottom: 8px;
+            font-size: 0.75rem;
         }
+
+        .status-led {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #2d3646; border-radius: 10px; }
+        
+        input::-webkit-outer-spin-button,
+        input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
     </style>
 </head>
 <body>
 
-    <!-- SVG Template Layer -->
-    <div class="svg-background">
-        <svg width="100%" height="100%" viewBox="0 0 1920 1080" preserveAspectRatio="xMidYMid slice" version="1.1" xmlns="http://www.w3.org/2000/svg">
-            <rect x="0" y="0" width="1920" height="1080" style="fill:rgb(20,28,42);"/>
-            <g transform="matrix(1.791357,0,0,1.791357,-39.566571,-4.934933)">
-                <text x="50px" y="77px" style="font-family: 'Stack Sans Notch'; font-weight:700;font-size:30px;fill:white; letter-spacing: 1px;">FRACTION <tspan fill="rgb(234,168,52)">CHECKER</tspan></text>
-            </g>
-            <g id="CONTENT-FRAME" transform="matrix(1,0,0,0.901191,0,11.773798)">
-                <rect x="50" y="190" width="1820" height="840" style="fill:rgb(235,235,235);fill-opacity:0.02; stroke: rgba(255,255,255,0.05); stroke-width: 1px;"/>
-            </g>
-        </svg>
-    </div>
+    <!-- Header Navigation -->
+    <nav class="flex items-center justify-between px-8 py-4 border-b border-[#262c3a] bg-[#0f141e] shrink-0">
+        <div class="flex items-center gap-4">
+            <div class="w-10 h-10 bg-amber-500 rounded flex items-center justify-center shadow-lg shadow-amber-500/20">
+                <i data-lucide="layers" class="w-6 h-6 text-black"></i>
+            </div>
+            <h1 class="text-2xl font-black tracking-tighter uppercase">Equivalent Fraction <span class="text-amber-500">Checker</span></h1>
+        </div>
+        <div class="flex items-center gap-8">
+            <div class="flex items-center gap-3">
+                <div class="status-led"></div>
+                <span class="mono text-[11px] uppercase tracking-widest text-green-500 font-bold">Engine Active</span>
+            </div>
+            <div class="h-6 w-[1px] bg-slate-800"></div>
+            <span class="mono text-[11px] text-slate-500 font-bold tracking-widest uppercase">V5.0.0-STABLE</span>
+        </div>
+    </nav>
 
-    <!-- Interactive Layer -->
-    <div class="content-overlay font-notch">
-        <!-- Input Sidebar -->
-        <div class="w-1/3 flex flex-col gap-4 sidebar-panel">
-            <div class="glass-panel p-6 flex flex-col items-center">
-                <h2 class="text-[#EAA834] font-bold uppercase tracking-widest text-[10px] mb-8 opacity-80 self-start">Comparison Terminal</h2>
+    <main class="flex-1 flex overflow-hidden p-6 gap-6">
+        
+        <!-- Left: Input & History -->
+        <div class="w-80 flex flex-col gap-6 shrink-0">
+            <!-- Input Terminal -->
+            <div class="panel p-6 flex flex-col gap-6">
+                <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">Comparison Terminal</span>
                 
-                <div class="flex items-center gap-8">
-                    <!-- Fraction A -->
-                    <div class="flex flex-col items-center">
-                        <input type="number" id="numA" value="1" class="fraction-input">
-                        <div class="fraction-divider"></div>
-                        <input type="number" id="denA" value="2" class="fraction-input">
+                <div class="flex items-center justify-center gap-4">
+                    <div class="flex flex-col gap-2">
+                        <input id="n1" type="number" value="1" min="0" oninput="handleNumericInput()" class="input-box">
+                        <div class="h-[2px] bg-slate-700"></div>
+                        <input id="d1" type="number" value="2" min="1" max="24" oninput="handleNumericInput()" class="input-box">
                     </div>
-
-                    <div class="text-3xl text-white/20 font-bold">=?</div>
-
-                    <!-- Fraction B -->
-                    <div class="flex flex-col items-center">
-                        <input type="number" id="numB" value="2" class="fraction-input">
-                        <div class="fraction-divider"></div>
-                        <input type="number" id="denB" value="4" class="fraction-input">
+                    <div class="text-2xl mono text-slate-700 font-black">=?</div>
+                    <div class="flex flex-col gap-2">
+                        <input id="n2" type="number" value="2" min="0" oninput="handleNumericInput()" class="input-box">
+                        <div class="h-[2px] bg-slate-700"></div>
+                        <input id="d2" type="number" value="4" min="1" max="24" oninput="handleNumericInput()" class="input-box">
                     </div>
                 </div>
 
-                <div class="mt-8 flex gap-3 w-full">
-                    <button id="checkBtn" class="flex-1 bg-[#EAA834] hover:bg-[#f3b54a] active:scale-[0.98] text-slate-900 font-bold py-3 rounded-md transition-all text-[11px] uppercase tracking-wider">
-                        Check Equivalence
-                    </button>
-                </div>
+                <button onclick="logAnalysis()" class="btn-analyze">Record Result</button>
+            </div>
 
-                <div id="resultBox" class="mt-6 w-full py-4 rounded-lg text-center border transition-all duration-500">
-                    <span id="resultText" class="uppercase font-bold tracking-widest text-sm">Waiting...</span>
+            <!-- Calculated State -->
+            <div class="panel p-6 bg-[#121824]">
+                <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500 mb-4 block">State Analysis</span>
+                <div id="resultState" class="text-center py-6 rounded-lg bg-black/30 border border-white/5">
+                    <div id="stateIndicator" class="text-2xl font-black mono tracking-tighter">--</div>
+                    <p id="stateSub" class="text-[10px] uppercase mt-2 text-slate-600 font-bold tracking-widest">Awaiting Input</p>
                 </div>
             </div>
 
-            <!-- History Panel -->
-            <div class="glass-panel flex-1 p-6 flex flex-col overflow-hidden">
+            <!-- Registry -->
+            <div class="panel flex-1 p-6 flex flex-col overflow-hidden">
                 <div class="flex justify-between items-center mb-4">
-                    <h2 class="text-white font-bold text-[10px] uppercase tracking-wider opacity-70">Check History</h2>
-                    <button id="clearHistory" class="text-[9px] text-rose-400/60 hover:text-rose-400 uppercase font-bold transition-colors">Clear</button>
+                    <span class="text-[11px] font-bold uppercase tracking-[0.2em] text-slate-500">Registry</span>
+                    <button onclick="clearRegistry()" class="text-[10px] uppercase text-red-500 hover:text-red-400 font-bold tracking-widest">Clear</button>
                 </div>
-                <div id="logs" class="space-y-2 font-mono-custom text-[10px] overflow-y-auto pr-1">
-                    <div id="emptyLog" class="text-slate-500 italic text-center py-10 opacity-50">No history recorded</div>
+                <div id="registry" class="flex-1 overflow-y-auto space-y-2">
+                    <div class="opacity-20 text-center py-10">
+                        <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2"></i>
+                        <p class="text-[10px] uppercase tracking-widest">No Records</p>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <!-- Visual Analysis Area -->
-        <div class="w-2/3 glass-panel relative flex flex-col main-panel">
-            <div class="p-3 border-b border-white/10 flex justify-between items-center bg-white/5 rounded-t-xl">
-                <div class="text-[9px] text-slate-400 font-mono-custom tracking-tighter">ENGINE: <span class="text-emerald-400">MATH_VIS_V1</span> // RATIO_DETECTOR</div>
-                <div id="ratioDisplay" class="text-[#EAA834] font-mono-custom text-[10px] font-bold">RATIO: 0.500</div>
+        <!-- Right: Visualization -->
+        <div class="flex-1 panel relative flex flex-col blueprint-bg p-10 overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0f141e]/40 pointer-events-none"></div>
+            
+            <!-- Visualization Header -->
+            <div class="relative z-10 flex justify-between items-start mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-2">
+                        <h2 class="text-4xl font-black uppercase tracking-tighter">Fractional <span class="text-amber-500">Slates</span></h2>
+                    </div>
+                    <p class="text-blue-400 mono text-[10px] tracking-[0.3em] font-bold uppercase">Manual manipulation active // Tap to toggle segments</p>
+                </div>
+                <div id="bigRatioDisplay" class="text-4xl font-light text-slate-800 mono tracking-widest">1/2 : 2/4</div>
             </div>
-            <div id="canvasContainer" class="flex-1 relative m-8">
-                <canvas id="visualCanvas"></canvas>
+
+            <!-- Bars -->
+            <div class="relative z-10 flex-1 flex flex-col justify-center gap-16">
+                <!-- Bar A -->
+                <div class="space-y-4">
+                    <div class="flex justify-between text-[11px] font-black uppercase tracking-widest text-slate-400">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-amber-500 shadow-[0_0_5px_#f59e0b]"></span>
+                            Slate Alpha
+                        </div>
+                        <span id="percentA" class="mono text-amber-500">50%</span>
+                    </div>
+                    <div id="barA" class="fraction-bar-container" data-fraction="1"></div>
+                </div>
+
+                <!-- Bar B -->
+                <div class="space-y-4">
+                    <div class="flex justify-between text-[11px] font-black uppercase tracking-widest text-slate-400">
+                        <div class="flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-blue-500 shadow-[0_0_5px_#3b82f6]"></span>
+                            Slate Beta
+                        </div>
+                        <span id="percentB" class="mono text-blue-500">50%</span>
+                    </div>
+                    <div id="barB" class="fraction-bar-container" data-fraction="2"></div>
+                </div>
+            </div>
+
+            <!-- Math Logic Footer -->
+            <div id="logicFooter" class="relative z-10 mt-auto pt-8 border-t border-slate-800/50">
+                <div class="grid grid-cols-3 items-center">
+                    <div class="text-center">
+                        <div class="text-[9px] text-slate-500 uppercase font-black mb-1 tracking-widest">Cross Product α</div>
+                        <div id="vAlpha" class="text-2xl mono font-black">4</div>
+                    </div>
+                    <div class="flex flex-col items-center">
+                        <div id="matchTag" class="px-3 py-1 border border-slate-700 rounded text-[9px] mono text-slate-500 uppercase tracking-widest font-black">Analyzing</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-[9px] text-slate-500 uppercase font-black mb-1 tracking-widest">Cross Product β</div>
+                        <div id="vBeta" class="text-2xl mono font-black">4</div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </main>
 
     <script>
-        const canvas = document.getElementById('visualCanvas');
-        const ctx = canvas.getContext('2d');
-        const container = document.getElementById('canvasContainer');
-        const inputs = ['numA', 'denA', 'numB', 'denB'];
-        const resultBox = document.getElementById('resultBox');
-        const resultText = document.getElementById('resultText');
-        const ratioDisplay = document.getElementById('ratioDisplay');
-        const logsContainer = document.getElementById('logs');
-        const checkBtn = document.getElementById('checkBtn');
-        const clearHistory = document.getElementById('clearHistory');
-        const emptyLog = document.getElementById('emptyLog');
+        const state = {
+            n1: 1, d1: 2,
+            n2: 2, d2: 4
+        };
 
         function init() {
-            window.addEventListener('resize', resize);
-            inputs.forEach(id => {
-                document.getElementById(id).addEventListener('input', updateRealtime);
-            });
+            renderBars();
+            calculate();
+            lucide.createIcons();
+        }
+
+        function handleNumericInput() {
+            state.n1 = parseInt(document.getElementById('n1').value) || 0;
+            state.d1 = Math.max(1, Math.min(24, parseInt(document.getElementById('d1').value) || 1));
+            state.n2 = parseInt(document.getElementById('n2').value) || 0;
+            state.d2 = Math.max(1, Math.min(24, parseInt(document.getElementById('d2').value) || 1));
             
-            checkBtn.addEventListener('click', commitCheck);
-            clearHistory.addEventListener('click', () => {
-                logsContainer.innerHTML = '';
-                logsContainer.appendChild(emptyLog);
-            });
-
-            resize();
-            updateRealtime();
-        }
-
-        function resize() {
-            const rect = container.getBoundingClientRect();
-            const dpr = window.devicePixelRatio || 1;
-            canvas.style.width = rect.width + 'px';
-            canvas.style.height = rect.height + 'px';
-            canvas.width = rect.width * dpr;
-            canvas.height = rect.height * dpr;
-            ctx.scale(dpr, dpr);
-            updateRealtime();
-        }
-
-        function updateRealtime() {
-            const na = parseInt(document.getElementById('numA').value) || 0;
-            const da = parseInt(document.getElementById('denA').value) || 1;
-            const nb = parseInt(document.getElementById('numB').value) || 0;
-            const db = parseInt(document.getElementById('denB').value) || 1;
-
-            const valA = na / da;
-            const valB = nb / db;
-            const isEquivalent = Math.abs(valA - valB) < 0.000001 && da !== 0 && db !== 0;
-
-            if (da === 0 || db === 0) {
-                resultBox.className = "mt-6 w-full py-4 rounded-lg text-center border border-white/10 text-slate-500";
-                resultText.innerText = "INVALID INPUT";
-                ratioDisplay.innerText = "ERROR: DIV/0";
-            } else if (isEquivalent) {
-                resultBox.className = "mt-6 w-full py-4 rounded-lg text-center border border-emerald-500/50 bg-emerald-500/10 text-emerald-400";
-                resultText.innerText = "EQUIVALENT";
-                ratioDisplay.innerText = `RATIO: ${valA.toFixed(3)}`;
-            } else {
-                resultBox.className = "mt-6 w-full py-4 rounded-lg text-center border border-rose-500/50 bg-rose-500/10 text-rose-400";
-                resultText.innerText = "NOT EQUIVALENT";
-                ratioDisplay.innerText = `DIFF: ${Math.abs(valA - valB).toFixed(3)}`;
-            }
-
-            draw(na, da, nb, db);
-        }
-
-        function commitCheck() {
-            const na = document.getElementById('numA').value;
-            const da = document.getElementById('denA').value;
-            const nb = document.getElementById('numB').value;
-            const db = document.getElementById('denB').value;
-
-            if (da == 0 || db == 0) return;
-
-            const isEq = Math.abs((na/da) - (nb/db)) < 0.000001;
+            // Sync caps
+            if (state.n1 > state.d1) state.n1 = state.d1;
+            if (state.n2 > state.d2) state.n2 = state.d2;
             
-            if (emptyLog) emptyLog.remove();
+            document.getElementById('n1').value = state.n1;
+            document.getElementById('d1').value = state.d1;
+            document.getElementById('n2').value = state.n2;
+            document.getElementById('d2').value = state.d2;
 
-            const logEntry = document.createElement('div');
-            logEntry.className = `p-2 rounded flex justify-between items-center border-l-2 ${isEq ? 'bg-emerald-500/5 border-emerald-500/50 text-emerald-200/80' : 'bg-rose-500/5 border-rose-500/50 text-rose-200/80'}`;
-            
-            logEntry.innerHTML = `
-                <span>${na}/${da} vs ${nb}/${db}</span>
-                <span class="text-[8px] opacity-60 uppercase font-bold">${isEq ? 'Pass' : 'Fail'}</span>
-            `;
-
-            logsContainer.prepend(logEntry);
+            renderBars();
+            calculate();
         }
 
-        function draw(na, da, nb, db) {
-            const dpr = window.devicePixelRatio || 1;
-            const w = canvas.width / dpr;
-            const h = canvas.height / dpr;
-            ctx.clearRect(0, 0, w, h);
-
-            const barHeight = 60;
-            const barWidth = w * 0.8;
-            const startX = (w - barWidth) / 2;
-            const startY = h / 2 - 80;
-
-            drawFractionBar(startX, startY, barWidth, barHeight, na, da, "FRACTION A", "#EAA834");
-            drawFractionBar(startX, startY + 120, barWidth, barHeight, nb, db, "FRACTION B", "#4ade80");
-        }
-
-        function drawFractionBar(x, y, w, h, num, den, label, color) {
-            ctx.fillStyle = "rgba(255,255,255,0.05)";
-            ctx.fillRect(x, y, w, h);
-
-            ctx.fillStyle = "rgba(255,255,255,0.4)";
-            ctx.font = '10px "JetBrains Mono"';
-            ctx.textAlign = 'left';
-            ctx.fillText(label, x, y - 10);
-
-            if (den <= 0) return;
-
-            const segmentWidth = w / den;
-            for (let i = 0; i < den; i++) {
-                ctx.strokeStyle = "rgba(255,255,255,0.1)";
-                ctx.strokeRect(x + (i * segmentWidth), y, segmentWidth, h);
-                
-                if (i < num) {
-                    ctx.fillStyle = color;
-                    ctx.globalAlpha = 0.6;
-                    ctx.fillRect(x + (i * segmentWidth) + 2, y + 2, segmentWidth - 4, h - 4);
-                    ctx.globalAlpha = 1.0;
+        function renderBars() {
+            const renderBar = (elId, n, d, colorClass) => {
+                const el = document.getElementById(elId);
+                el.innerHTML = '';
+                for (let i = 0; i < d; i++) {
+                    const segment = document.createElement('div');
+                    segment.className = 'segment flex-1';
+                    
+                    const fill = document.createElement('div');
+                    fill.className = `segment-fill ${i < n ? colorClass : 'bg-transparent'}`;
+                    
+                    segment.appendChild(fill);
+                    segment.onclick = () => handleSegmentClick(elId === 'barA' ? 1 : 2, i + 1);
+                    el.appendChild(segment);
                 }
+            };
+
+            renderBar('barA', state.n1, state.d1, 'bg-amber-500 shadow-[inset_0_0_20px_rgba(245,158,11,0.3)]');
+            renderBar('barB', state.n2, state.d2, 'bg-blue-500 shadow-[inset_0_0_20px_rgba(59,130,246,0.3)]');
+
+            document.getElementById('percentA').innerText = ((state.n1 / state.d1) * 100).toFixed(0) + '%';
+            document.getElementById('percentB').innerText = ((state.n2 / state.d2) * 100).toFixed(0) + '%';
+            document.getElementById('bigRatioDisplay').innerText = `${state.n1}/${state.d1} : ${state.n2}/${state.d2}`;
+        }
+
+        function handleSegmentClick(fractionNum, index) {
+            if (fractionNum === 1) {
+                state.n1 = index;
+                document.getElementById('n1').value = state.n1;
+            } else {
+                state.n2 = index;
+                document.getElementById('n2').value = state.n2;
+            }
+            renderBars();
+            calculate();
+        }
+
+        function calculate() {
+            const cp1 = state.n1 * state.d2;
+            const cp2 = state.n2 * state.d1;
+            const isEquiv = cp1 === cp2 && state.d1 > 0 && state.d2 > 0;
+
+            const indicator = document.getElementById('stateIndicator');
+            const sub = document.getElementById('stateSub');
+            const matchTag = document.getElementById('matchTag');
+            const bigRatio = document.getElementById('bigRatioDisplay');
+
+            document.getElementById('vAlpha').innerText = cp1;
+            document.getElementById('vBeta').innerText = cp2;
+
+            if (isEquiv) {
+                indicator.innerText = "EQUIVALENT";
+                indicator.className = "text-2xl font-black mono text-green-500 tracking-tighter";
+                sub.innerText = "System Match Verified";
+                matchTag.innerText = "MATCH FOUND";
+                matchTag.className = "px-3 py-1 border border-green-500 rounded text-[9px] mono text-green-500 uppercase tracking-widest font-black";
+                bigRatio.className = "text-4xl font-light text-green-500/80 mono tracking-widest transition-colors";
+            } else {
+                indicator.innerText = "DISPARATE";
+                indicator.className = "text-2xl font-black mono text-red-500 tracking-tighter";
+                sub.innerText = "Ratio Conflict Detected";
+                matchTag.innerText = "MISMATCH";
+                matchTag.className = "px-3 py-1 border border-red-500 rounded text-[9px] mono text-red-500 uppercase tracking-widest font-black";
+                bigRatio.className = "text-4xl font-light text-slate-800 mono tracking-widest transition-colors";
             }
         }
 
-        init();
+        function logAnalysis() {
+            const registry = document.getElementById('registry');
+            if (registry.querySelector('.opacity-20')) registry.innerHTML = '';
+
+            const cp1 = state.n1 * state.d2;
+            const cp2 = state.n2 * state.d1;
+            const isEquiv = cp1 === cp2;
+            const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
+
+            const entry = document.createElement('div');
+            entry.className = 'registry-entry flex justify-between items-center animate-in fade-in slide-in-from-left duration-200';
+            entry.innerHTML = `
+                <div>
+                    <div class="text-[9px] text-slate-600 mono mb-1">${time} // COMP_LOG</div>
+                    <div class="mono font-bold text-slate-300">${state.n1}/${state.d1} vs ${state.n2}/${state.d2}</div>
+                </div>
+                <div class="text-right">
+                    <div class="text-[10px] mono font-black ${isEquiv ? 'text-green-500' : 'text-red-500'}">${isEquiv ? 'VALID' : 'INVALID'}</div>
+                    <div class="text-[8px] text-slate-500 mono">${cp1} : ${cp2}</div>
+                </div>
+            `;
+            registry.prepend(entry);
+        }
+
+        function clearRegistry() {
+            document.getElementById('registry').innerHTML = `
+                <div class="opacity-20 text-center py-10">
+                    <i data-lucide="inbox" class="w-8 h-8 mx-auto mb-2"></i>
+                    <p class="text-[10px] uppercase tracking-widest">No Records</p>
+                </div>
+            `;
+            lucide.createIcons();
+        }
+
+        window.onload = init;
     </script>
 </body>
 </html>
