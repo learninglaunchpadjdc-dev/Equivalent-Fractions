@@ -130,6 +130,10 @@
             box-shadow: 0 0 8px #22c55e;
         }
 
+        #multiplierBridge {
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: transparent; }
         ::-webkit-scrollbar-thumb { background: #2d3646; border-radius: 10px; }
@@ -212,7 +216,7 @@
             <div class="absolute inset-0 bg-gradient-to-b from-transparent to-[#0f141e]/40 pointer-events-none"></div>
             
             <!-- Visualization Header -->
-            <div class="relative z-10 flex justify-between items-start mb-12">
+            <div class="relative z-10 flex justify-between items-start mb-8">
                 <div>
                     <div class="flex items-center gap-3 mb-2">
                         <h2 class="text-4xl font-black uppercase tracking-tighter">Fractional <span class="text-amber-500">Slates</span></h2>
@@ -222,8 +226,8 @@
                 <div id="bigRatioDisplay" class="text-4xl font-light text-slate-800 mono tracking-widest">1/2 : 2/4</div>
             </div>
 
-            <!-- Bars -->
-            <div class="relative z-10 flex-1 flex flex-col justify-center gap-16">
+            <!-- Bars & Multiplier Container -->
+            <div class="relative z-10 flex-1 flex flex-col justify-center gap-4">
                 <!-- Bar A -->
                 <div class="space-y-4">
                     <div class="flex justify-between text-[11px] font-black uppercase tracking-widest text-slate-400">
@@ -234,6 +238,16 @@
                         <span id="percentA" class="mono text-amber-500">50%</span>
                     </div>
                     <div id="barA" class="fraction-bar-container" data-fraction="1"></div>
+                </div>
+
+                <!-- Multiplier Indicator Bridge -->
+                <div id="multiplierBridge" class="opacity-0 h-12 flex items-center justify-center gap-8">
+                    <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
+                    <div class="flex items-center gap-3 bg-[#0a0e14] px-4 py-1 border border-slate-700/50 rounded-full">
+                        <div class="text-[10px] font-black mono text-slate-500 uppercase tracking-widest">Factor</div>
+                        <div id="factorDisplay" class="text-amber-500 font-black mono">x2</div>
+                    </div>
+                    <div class="h-[1px] flex-1 bg-gradient-to-r from-transparent via-slate-700 to-transparent"></div>
                 </div>
 
                 <!-- Bar B -->
@@ -339,12 +353,14 @@
         function calculate() {
             const cp1 = state.n1 * state.d2;
             const cp2 = state.n2 * state.d1;
-            const isEquiv = cp1 === cp2 && state.d1 > 0 && state.d2 > 0;
+            const isEquiv = cp1 === cp2 && state.d1 > 0 && state.d2 > 0 && state.n1 > 0;
 
             const indicator = document.getElementById('stateIndicator');
             const sub = document.getElementById('stateSub');
             const matchTag = document.getElementById('matchTag');
             const bigRatio = document.getElementById('bigRatioDisplay');
+            const bridge = document.getElementById('multiplierBridge');
+            const factorEl = document.getElementById('factorDisplay');
 
             document.getElementById('vAlpha').innerText = cp1;
             document.getElementById('vBeta').innerText = cp2;
@@ -356,6 +372,12 @@
                 matchTag.innerText = "MATCH FOUND";
                 matchTag.className = "px-3 py-1 border border-green-500 rounded text-[9px] mono text-green-500 uppercase tracking-widest font-black";
                 bigRatio.className = "text-4xl font-light text-green-500/80 mono tracking-widest transition-colors";
+                
+                // Show Factor Bridge
+                const factor = (state.n2 / state.n1);
+                factorEl.innerText = factor % 1 === 0 ? `x${factor}` : `x${factor.toFixed(2)}`;
+                bridge.style.opacity = "1";
+                bridge.style.transform = "translateY(0)";
             } else {
                 indicator.innerText = "DISPARATE";
                 indicator.className = "text-2xl font-black mono text-red-500 tracking-tighter";
@@ -363,6 +385,10 @@
                 matchTag.innerText = "MISMATCH";
                 matchTag.className = "px-3 py-1 border border-red-500 rounded text-[9px] mono text-red-500 uppercase tracking-widest font-black";
                 bigRatio.className = "text-4xl font-light text-slate-800 mono tracking-widest transition-colors";
+                
+                // Hide Factor Bridge
+                bridge.style.opacity = "0";
+                bridge.style.transform = "translateY(10px)";
             }
         }
 
@@ -376,7 +402,7 @@
             const time = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false });
 
             const entry = document.createElement('div');
-            entry.className = 'registry-entry flex justify-between items-center animate-in fade-in slide-in-from-left duration-200';
+            entry.className = 'registry-entry flex justify-between items-center';
             entry.innerHTML = `
                 <div>
                     <div class="text-[9px] text-slate-600 mono mb-1">${time} // COMP_LOG</div>
